@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -40,6 +41,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
+
 TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart2;
@@ -53,6 +56,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_TIM1_Init(void);
+static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -92,6 +96,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_TIM1_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   if(HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1) != HAL_OK)
    {
@@ -99,21 +104,67 @@ int main(void)
      Error_Handler();
    }
 
+  HAL_ADC_Start(&hadc1);
+
+  uint8_t water_detected_message[] = "Water Detected\r\n";
+  uint8_t adcValueStr[34]; // Buffer big enough for 32-bit number
+  int pwm_servo = 0;
+
+  uint32_t adcValue = 0;
+
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-		  while (1)
-		  {
+  while (1)
+  {
+      // Start ADC Conversion
+      HAL_ADC_Start(&hadc1);
+
+      // Poll ADC
+      HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+
+      HAL_Delay(100);
+
+      // Check if the conversion of regular channel is finished
+      if ((HAL_ADC_GetState(&hadc1) & HAL_ADC_STATE_REG_EOC) == HAL_ADC_STATE_REG_EOC)
+      {
+          // Get the converted value
+          adcValue = HAL_ADC_GetValue(&hadc1);
+          HAL_UART_Transmit(&huart2, (uint8_t*)"ADC Ready\r\n", sizeof(11), HAL_MAX_DELAY);
+
+      }
+
+      // Print the ADC value to the string
+      int len = sprintf(adcValueStr, "%lu\r\n", adcValue); // "%lu" is the format specifier for uint32_t
+
+      // Delay to prevent high CPU usage
+      HAL_Delay(500);
+
+      GPIO_PinState Water = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6);
+      if(Water == GPIO_PIN_SET)
+      {
+          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1,GPIO_PIN_SET);
+          pwm_servo = 400;
+      }
+      else
+      {
+          HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1,GPIO_PIN_RESET);
+          pwm_servo = 2600;
+      }
+
+      __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, pwm_servo);
+
+      // Send the ADC value via UART
+      HAL_UART_Transmit(&huart2, (uint8_t*)adcValueStr, len, HAL_MAX_DELAY);
+  }
 
 
-		      }
 
 
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-		  }
   /* USER CODE END 3 */
 }
 
@@ -166,6 +217,49 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
+
+/**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC1_Init(void)
+{
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV2;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE; // Enable the scan conversion mode
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  hadc1.Init.LowPowerAutoWait = DISABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.NbrOfConversion = 1; // Convert only one channel
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.Overrun = ADC_OVR_DATA_PRESERVED;
+  hadc1.Init.OversamplingMode = DISABLE;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  sConfig.Channel = ADC_CHANNEL_5;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5; // Increase the sampling time
+  sConfig.SingleDiff = ADC_SINGLE_ENDED;
+  sConfig.OffsetNumber = ADC_OFFSET_NONE;
+  sConfig.Offset = 0;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+}
+
+
 
 /**
   * @brief TIM1 Initialization Function
@@ -228,7 +322,6 @@ void MX_TIM1_Init(void)
 
     HAL_TIM_MspPostInit(&htim1);
   }
-
 
 /**
   * @brief USART2 Initialization Function
