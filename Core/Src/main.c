@@ -106,23 +106,7 @@ int main(void)
 		  while (1)
 		  {
 
-//		    HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_1); // toggles the pin PB1
-//		    HAL_Delay(500); // delay for 500ms
 
-		    GPIO_PinState Water = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6);
-		      if(Water == GPIO_PIN_SET)
-		      {
-		    	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1,GPIO_PIN_SET);
-		    	  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 400);
-		    	  HAL_Delay(100);
-
-		        // If the pin is set do something
-		      }
-		      else
-		      {
-		    	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1,GPIO_PIN_RESET);
-		    	  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, 2600);
-		        // If the pin is reset do something else
 		      }
 
 
