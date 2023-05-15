@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "string.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -106,12 +105,16 @@ int main(void)
 
   HAL_ADC_Start(&hadc1);
 
+//  HAL_ADC_Start(&hadc1);
+
   uint8_t water_detected_message[] = "Water Detected\r\n";
   uint8_t adcValueStr[34]; // Buffer big enough for 32-bit number
   int pwm_servo = 0;
 
+
   uint32_t adcValue = 0;
 
+  int i = 0;
 
 
 
@@ -121,11 +124,16 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+//	  MX_ADC1_Init();
+
       // Start ADC Conversion
-      HAL_ADC_Start(&hadc1);
+
 
       // Poll ADC
-      HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+
+      if(HAL_ADC_PollForConversion(&hadc1, 300) == HAL_OK)
+//    	  HAL_UART_Transmit(&huart2, (uint8_t*)"HAL_ADC_PollForConversion Ready\r\n", sizeof("HAL_ADC_PollForConversion Ready\r\n"), HAL_MAX_DELAY);
+
 
       HAL_Delay(100);
 
@@ -133,16 +141,20 @@ int main(void)
       if ((HAL_ADC_GetState(&hadc1) & HAL_ADC_STATE_REG_EOC) == HAL_ADC_STATE_REG_EOC)
       {
           // Get the converted value
-          adcValue = HAL_ADC_GetValue(&hadc1);
-          HAL_UART_Transmit(&huart2, (uint8_t*)"ADC Ready\r\n", sizeof(11), HAL_MAX_DELAY);
 
+    	  adcValue = HAL_ADC_GetValue(&hadc1);
+//          HAL_UART_Transmit(&huart2, (uint8_t*)"ADC Ready\r\n", 11, HAL_MAX_DELAY);
       }
 
+//      adcValue = adcValue*(3.3/4096.0);
+
+
+
       // Print the ADC value to the string
-      int len = sprintf(adcValueStr, "%lu\r\n", adcValue); // "%lu" is the format specifier for uint32_t
+      int len = sprintf(adcValueStr, "%lu\r\n", adcValue); // "%lu" is the format specifier for
 
       // Delay to prevent high CPU usage
-      HAL_Delay(500);
+      HAL_Delay(600);
 
       GPIO_PinState Water = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6);
       if(Water == GPIO_PIN_SET)
@@ -160,6 +172,11 @@ int main(void)
 
       // Send the ADC value via UART
       HAL_UART_Transmit(&huart2, (uint8_t*)adcValueStr, len, HAL_MAX_DELAY);
+
+      char i_str[12]; // Buffer for string representation of i
+      sprintf(i_str, "%d\r\n", i); // Convert i to string
+      HAL_UART_Transmit(&huart2, (uint8_t*)i_str, strlen(i_str), HAL_MAX_DELAY); // Transmit i
+      i++;
   }
 
 
@@ -218,6 +235,8 @@ void SystemClock_Config(void)
   }
 }
 
+
+
 /**
   * @brief ADC1 Initialization Function
   * @param None
@@ -225,17 +244,28 @@ void SystemClock_Config(void)
   */
 static void MX_ADC1_Init(void)
 {
+
+  /* USER CODE BEGIN ADC1_Init 0 */
+
+  /* USER CODE END ADC1_Init 0 */
+
   ADC_ChannelConfTypeDef sConfig = {0};
 
+  /* USER CODE BEGIN ADC1_Init 1 */
+
+  /* USER CODE END ADC1_Init 1 */
+
+  /** Common config
+  */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV2;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE; // Enable the scan conversion mode
+  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
-  hadc1.Init.NbrOfConversion = 1; // Convert only one channel
+  hadc1.Init.NbrOfConversion = 1;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
@@ -247,9 +277,11 @@ static void MX_ADC1_Init(void)
     Error_Handler();
   }
 
-  sConfig.Channel = ADC_CHANNEL_5;
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_8;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5; // Increase the sampling time
+  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -257,9 +289,11 @@ static void MX_ADC1_Init(void)
   {
     Error_Handler();
   }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
 }
-
-
 
 /**
   * @brief TIM1 Initialization Function
@@ -339,7 +373,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 9600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
