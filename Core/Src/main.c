@@ -103,7 +103,7 @@ int main(void)
      Error_Handler();
    }
 
-  HAL_ADC_Start(&hadc1);
+//  HAL_ADC_Start(&hadc1);
 
 //  HAL_ADC_Start(&hadc1);
 
@@ -131,22 +131,38 @@ int main(void)
 
       // Poll ADC
 
-      if(HAL_ADC_PollForConversion(&hadc1, 300) == HAL_OK)
-//    	  HAL_UART_Transmit(&huart2, (uint8_t*)"HAL_ADC_PollForConversion Ready\r\n", sizeof("HAL_ADC_PollForConversion Ready\r\n"), HAL_MAX_DELAY);
+	  // Start ADC Conversion
+	    if(HAL_ADC_Start(&hadc1) != HAL_OK) // Starts the ADC Conversion
+	    {
+	      Error_Handler();
+	    }
 
+	    // Poll ADC
+	    if(HAL_ADC_PollForConversion(&hadc1, 300) == HAL_OK)
+	    {
+	      // Get the converted value
+	      adcValue = HAL_ADC_GetValue(&hadc1);
+	    }
 
       HAL_Delay(100);
 
-      // Check if the conversion of regular channel is finished
-      if ((HAL_ADC_GetState(&hadc1) & HAL_ADC_STATE_REG_EOC) == HAL_ADC_STATE_REG_EOC)
-      {
-          // Get the converted value
-
-    	  adcValue = HAL_ADC_GetValue(&hadc1);
-//          HAL_UART_Transmit(&huart2, (uint8_t*)"ADC Ready\r\n", 11, HAL_MAX_DELAY);
-      }
+//      // Check if the conversion of regular channel is finished
+//      if ((HAL_ADC_GetState(&hadc1) & HAL_ADC_STATE_REG_EOC) == HAL_ADC_STATE_REG_EOC)
+//      {
+//          // Get the converted value
+//
+//    	  adcValue = HAL_ADC_GetValue(&hadc1);
+////          HAL_UART_Transmit(&huart2, (uint8_t*)"ADC Ready\r\n", 11, HAL_MAX_DELAY);
+//      }
 
 //      adcValue = adcValue*(3.3/4096.0);
+      if(HAL_ADC_Stop(&hadc1) != HAL_OK)
+      {
+        // Stop ADC Conversion
+        Error_Handler();
+      }
+
+
 
 
 
@@ -157,7 +173,7 @@ int main(void)
       HAL_Delay(600);
 
       GPIO_PinState Water = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6);
-      if(Water == GPIO_PIN_SET)
+      if(Water == GPIO_PIN_SET || adcValue>1200)
       {
           HAL_GPIO_WritePin(GPIOB, GPIO_PIN_1,GPIO_PIN_SET);
           pwm_servo = 400;
@@ -281,7 +297,7 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_8;
   sConfig.Rank = ADC_REGULAR_RANK_1;
-  sConfig.SamplingTime = ADC_SAMPLETIME_2CYCLES_5;
+  sConfig.SamplingTime = ADC_SAMPLETIME_640CYCLES_5;
   sConfig.SingleDiff = ADC_SINGLE_ENDED;
   sConfig.OffsetNumber = ADC_OFFSET_NONE;
   sConfig.Offset = 0;
@@ -373,7 +389,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 9600;
+  huart2.Init.BaudRate = 115200;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -416,12 +432,20 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PA3 */
+     GPIO_InitStruct.Pin = GPIO_PIN_3;
+     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+     GPIO_InitStruct.Pull = GPIO_NOPULL;
+     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   /*Configure GPIO pins : PB1 LD3_Pin */
   GPIO_InitStruct.Pin = GPIO_PIN_1|LD3_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
