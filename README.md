@@ -78,8 +78,7 @@ The Gas sensor for the sake of prototyping was replaced by an MQ-135 sensor to d
 
 The system now consists of a water sensor, MQ-135 sensor, alarm system (a LED and a buzzer), and two micro servo SG90 to control: one for controlling the water leakage and the other for controlling the gas leakage. 
 
-
-https://github.com/HashemKhaled/HomeSafetySystem/assets/64085426/69974e30-b23b-4617-a273-3f140bcafd02
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5CNIbkUylho" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 
 
