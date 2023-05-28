@@ -72,5 +72,5 @@ The Third Image is when the sensor gets in contact with water and the led is tur
 
 The Gas sensor for the sake of prototyping was replaced by an MQ-135 sensor to detect the CO2 level by converting the adc value measured from its analog output to CO2 concetration level in part per milion (ppm) using the calibration procedure provided in the sensor's datasheet.
 
-<img src="(https://github.com/HashemKhaled/HomeSafetySystem/assets/64085426/ff8eec1f-d71a-4b61-b203-3fc6b29b8a02)" width="50%">
+<img src="[(https://github.com/HashemKhaled/HomeSafetySystem/assets/64085426/ff8eec1f-d71a-4b61-b203-3fc6b29b8a02)](https://github.com/HashemKhaled/HomeSafetySystem/assets/64085426/ff8eec1f-d71a-4b61-b203-3fc6b29b8a02)" width="50%">
 
