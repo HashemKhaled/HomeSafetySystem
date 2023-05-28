@@ -60,8 +60,8 @@ all: main-build
 main-build: Home\ Safety\ Project.elf secondary-outputs
 
 # Tool invocations
-Home\ Safety\ Project.elf Home\ Safety\ Project.map: $(OBJS) $(USER_OBJS) /Users/Omar/STM32CubeIDE/workspace_1.12.1/Home\ Safety\ Project/STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "Home Safety Project.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/Omar/STM32CubeIDE/workspace_1.12.1/Home Safety Project/STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Home Safety Project.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Home\ Safety\ Project.elf Home\ Safety\ Project.map: $(OBJS) $(USER_OBJS) D:\Spring\ 2023\Embedded\ Systems\Project\Final\ Demo\HomeSafetySystem\STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Home Safety Project.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"D:\Spring 2023\Embedded Systems\Project\Final Demo\HomeSafetySystem\STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Home Safety Project.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
