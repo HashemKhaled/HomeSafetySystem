@@ -20,6 +20,7 @@
         1. [Folder Structure](#folder-structure)
 4. [Software Build and Deploy](#software-build-and-deploy) 
    1. [How To Run](#how-to-run)
+   2. [Pin Configurations](#pin-configurations)
 
     
 ## Project Description
@@ -62,19 +63,7 @@ Git: <https://github.com/HashemKhaled/HomeSafetySystem.git>.
 
 ## Software Build and Deploy
 
-Make sure you have the necessary hardware components (water sensor, gas sensor, valves) connected properly to the STM32 board.
 
-1- Clone the repository to your local machine using Git: <https://github.com/HashemKhaled/HomeSafetySystem.git>.
-
-2- Open the STM32 IDE and navigate to the project directory.
-
-3- Build the project by selecting the "Build" or "Compile" option in the IDE's menu. This will compile the source code and generate the binary file.
-
-4- Connect the STM32 board to your computer and ensure it is recognized by the IDE.
-
-5- Load the project to the STM32 board. This will transfer the binary file to the microcontroller.
-
-7- Power on the STM32 board and place the sensors near water or gas sources to detect any leakage. The system should detect leaks and trigger the corresponding alarms. Additionally, the valves should be controlled to close off the leaks. 
 
 ### How To Run
 
@@ -90,6 +79,19 @@ Make sure you have the necessary hardware components (water sensor, gas sensor, 
 
 5- Load the project to the STM32 board. This will transfer the binary file to the microcontroller.
 
-7- Power on the STM32 board and place the sensors near water or gas sources to detect any leakage. The system should detect leaks and trigger the corresponding alarms. Additionally, the valves should be controlled to close off the leaks. 
+6- Power on the STM32 board and place the sensors near water or gas sources to detect any leakage. The system should detect leaks and trigger the corresponding alarms. Additionally, the valves should be controlled to close off the leaks. 
 
+### Pin Configurations 
+1. PA0-> TIM2_CH1
+2. PA2-> VCP_TX
+3. PA3-> ADC1_1N8
+4. PA6-> GPIO_Input
+5. PB1-> GPIO_Output
+6. PB5-> GPIO_Output
+7. PB3-> LED3[Green]
+8. PA15-> VCP_RX
+9. PA14-> SWCLK
+10. PA13-> SWDIO
+11. PA8-> TIM1_CH1  
 
+Refere to <https://github.com/shalan/CSCE4301-WiKi/wiki/G3:-Home-Safety-System> for a better view of the Pin Configurations. 
