@@ -80,6 +80,16 @@ The system now consists of a water sensor, MQ-135 sensor, alarm system (a LED an
 
 [Link to Demo Video](https://www.youtube.com/watch?v=5CNIbkUylho&ab_channel=HashemElmalih)
 
+## Folder Structure
+├── Core/Src
+│   ├── main.c                      # Main application file
+│   ├── stm32l4xx_hal_msp.c         # HAL MSP (Microcontroller Support Package) file
+│   ├── stm32l4xx_it.c              # Interrupt handler file
+│   ├── syscalls.c                  # System calls file
+│   ├── sysmem.c                    # System memory file
+│   └── system_stm32l4xx.c          # STM32L4xx system initialization file
+├── README.md                       # Project documentation (you are here)
+└── .gitignore                      # Git ignore file
 ## Software Build and Deploy Instructions
 
 ### Prerequisites:
