@@ -80,4 +80,26 @@ The system now consists of a water sensor, MQ-135 sensor, alarm system (a LED an
 
 [Link to Demo Video](https://www.youtube.com/watch?v=5CNIbkUylho&ab_channel=HashemElmalih)
 
+## Software Build and Deploy Instructions
+
+### Prerequisites:
+
+STM32 IDE (Integrated Development Environment).
+STM32 microcontroller board.
+Git is installed on your system.
+Make sure you have the necessary hardware components (water sensor, gas sensor, valves) connected properly to the STM32 board.
+
+1- Clone the repository to your local machine using Git: <https://github.com/HashemKhaled/HomeSafetySystem.git>
+Open the STM32 IDE and navigate to the project directory.
+
+2- Open the STM32 IDE and navigate to the project directory.
+
+3- Build the project by selecting the "Build" or "Compile" option in the IDE's menu. This will compile the source code and generate the binary file.
+
+4- Connect the STM32 board to your computer and ensure it is recognized by the IDE.
+
+5- Load the project to the STM32 board. This will transfer the binary file to the microcontroller.
+
+7- Power on the STM32 board and place the sensors near water or gas sources to detect any leakage. The system should detect leaks and trigger the corresponding alarms. Additionally, the valves should be controlled to close off the leaks. 
+
 
