@@ -13,10 +13,12 @@
     1. [Dependencies](#dependencies)
     2. [Hardware Components](#hardware-components)
     3. [Getting the Source](#getting-the-source)
-        1. [Folder Structure](#folder-structure)
+        1. [Repo Contetnt](#repo-contetnt)
 4. [Software Build and Deploy](#software-build-and-deploy) 
    1. [How To Run](#how-to-run)
    2. [Pin Configurations](#pin-configurations)
+5. [WIKI Link](#wiki-link)
+6. [Future work](#future-work)
 
 
 ## Contributors
@@ -56,7 +58,7 @@ Git is installed on your system.
 
 Git: <https://github.com/HashemKhaled/HomeSafetySystem.git>.
 
-#### Folder Structure
+#### Repo Contetnt
 
 - [`main.c`](https://github.com/HashemKhaled/HomeSafetySystem/tree/main/Core/Src/main.c): Main application file
 - [`stm32l4xx_hal_msp.c`](https://github.com/HashemKhaled/HomeSafetySystem/tree/main/Core/Src/stm32l4xx_hal_msp.c): HAL MSP (Microcontroller Support Package) file
@@ -93,5 +95,11 @@ Make sure you have the necessary hardware components (water sensor, gas sensor, 
 5. PB1-> GPIO_Output (LED (alarm system))
 6. PB5-> GPIO_Output (Buzzer (alarm system)) 
 11. PA8-> TIM1_CH1 (conected to the servo of the water valve MQ135)
+<img src="https://github.com/HashemKhaled/HomeSafetySystem/assets/70941685/20a4afce-07d6-4a02-a929-a589675e3a5a" width="50%">
 
-Refere to <https://github.com/shalan/CSCE4301-WiKi/wiki/G3:-Home-Safety-System> for a better view of the Pin Configurations. 
+## WIKI Link
+ <https://github.com/shalan/CSCE4301-WiKi/wiki/G3:-Home-Safety-System> 
+
+## Future work
+
+Adding the ability to notify users on phone when a leakage is detected & setting the alarm to give a changing alarm frequency to give a better sounding alarm and to match industrial standards.
